@@ -1,0 +1,102 @@
+        }
+        .result-success {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .result-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2> Ayudante de Decisiones</h2>
+    
+    <div class="form-group">
+        <label for="tipo">Tipo de recomendación:</label>
+        <select id="tipo">
+            <option value="abierta">Abierta (Porcentaje %)</option>
+            <option value="cerrada">Cerrada (SÍ / NO)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="num_factores">Número de factores:</label>
+        <input type="number" id="num_factores" min="1" placeholder="Ej. 3">
+    </div>
+
+    <div class="form-group">
+        <label for="factores">Valores de los factores (separados por comas):</label>
+        <input type="text" id="factores" placeholder="Ej. 0.8, 0.5, 0.9">
+    </div>
+
+    <div class="form-group">
+        <label for="pesos">Pesos de los factores (separados por comas):</label>
+        <input type="text" id="pesos" placeholder="Ej. 2.0, 1.5, -0.5">
+    </div>
+
+    <button onclick="calcular()">Calcular Recomendación</button>
+
+    <div id="result" class="result-box"></div>
+</div>
+
+<script>
+function sigmoide(suma) {
+    return 1 / (1 + Math.exp(-suma));
+}
+
+function calcular() {
+    const tipo = document.getElementById('tipo').value;
+    const numFactores = parseInt(document.getElementById('num_factores').value);
+    const factoresStr = document.getElementById('factores').value;
+    const pesosStr = document.getElementById('pesos').value;
+    const resultDiv = document.getElementById('result');
+
+    resultDiv.style.display = 'none';
+
+    if (isNaN(numFactores) || numFactores <= 0) {
+        mostrarResultado("Por favor ingresa un número válido de factores.", true);
+        return;
+    }
+
+    const factores = factoresStr.split(',').map(x => parseFloat(x.trim())).filter(x => !isNaN(x));
+    const pesos = pesosStr.split(',').map(x => parseFloat(x.trim())).filter(x => !isNaN(x));
+
+    if (factores.length !== numFactores || pesos.length !== numFactores) {
+        mostrarResultado(`El número de factores (${factores.length}) y pesos (${pesos.length}) debe coincidir con la cantidad indicada (${numFactores}).`, true);
+        return;
+    }
+
+    let sumaTotal = 0;
+    for (let i = 0; i < numFactores; i++) {
+        sumaTotal += factores[i] * pesos[i];
+    }
+
+    const resultado = sigmoide(sumaTotal);
+
+    if (tipo === 'abierta') {
+        const porcentaje = (resultado * 100).toFixed(2);
+        mostrarResultado(`La recomendación calculada es del ${porcentaje}%`, false);
+    } else {
+        if (resultado >= 0.5) {
+            mostrarResultado("Recomendación: SÍ", false);
+        } else {
+            mostrarResultado("Recomendación: NO", false);
+        }
+    }
+}
+
+function mostrarResultado(mensaje, esError) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.style.display = 'block';
+    resultDiv.innerText = mensaje;
+    resultDiv.className = 'result-box ' + (esError ? 'result-error' : 'result-success');
+}
+</script>
+
+</body>
+</html>
