@@ -1,5 +1,5 @@
 Hola.
-Publiqué mi proyecto (EVA1) y me gustaría contarte cómo surgió
+Publiqué mi proyecto (EVA1) y me gustaría contarte cómo surgió.
 Tengo 16 años y hace poco decidí que después de la preparatoria estudiaría física, pero había 2 problemas;
 ¿dónde es mejor para estudiarla? y ¿estudiaré física teórica o experimental?.
 Me parecía que no era  tan difícil tomar esas decisiones hasta que investigué y me di cuenta de que tenia que considerar muchos factores como la seguridad de la universidad, el costo de renta en los alrededores, dificultad, etc.
